@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scfsoft.system.dao.mybatis.PersonalDepositMapper">
+    <delete id="deleteByStatDate" parameterType="java.lang.String">
+        DELETE
+        FROM PERSONAL_DEPOSIT
+        WHERE STAT_DATE = #{statDate, jdbcType=VARCHAR} AND CCY = #{ccy, jdbcType=VARCHAR}
+    </delete>
+
+    <select id="selectByStatDates" parameterType="com.scfsoft.system.entity.jpa.PersonalDeposit" resultType="com.scfsoft.system.dto.PersonalDepositDto">
+        SELECT T_BAL tBal, A_BAL aBal,
+        ORG_ID || STAT_DATE orgId
+        FROM PERSONAL_DEPOSIT
+        WHERE CCY = #{ccy, jdbcType=VARCHAR} AND STAT_DATE IN
+        <foreach collection="dayList" item="day" index="day" open="(" close=")" separator=",">
+            #{day, jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <select id="fetchDatasByPages" parameterType="com.scfsoft.system.dto.SearchParam" resultType="com.scfsoft.system.entity.jpa.PersonalDeposit">
+        SELECT
+            A.ORG_ID orgId,
+            A.T_BAL tBal,
+            A.A_BAL aBal,
+            A.STAT_DATE statDate,
+            A.CCY ccy,
+            A.UNIT unit,
+            A.T_BAL_THAN_LAST_D tBalThanLastD,
+            A.T_BAL_THAN_TENDAYS tBalThanTendays,
+            A.T_BAL_THAN_LAST_S tBalThanLastS,
+            A.T_BAL_THAN_LAST_M tBalThanLastM,
+            A.T_BAL_THAN_BEGIN_Y tBalThanBeginY,
+            A.T_BAL_THAN_LAST_Y tBalThanLastY,
+            A.A_BAL_THAN_LAST_D aBalThanLastD,
+            A.A_BAL_THAN_TENDAYS aBalThanTendays,
+            A.A_BAL_THAN_LAST_S aBalThanLastS,
+            A.A_BAL_THAN_LAST_M aBalThanLastM,
+            A.A_BAL_THAN_BEGIN_Y aBalThanBeginY,
+            A.A_BAL_THAN_LAST_Y aBalThanLastY,
+            A.PRICE_SCISSORS priceScissors,
+            B.ORG_NAME_SHORT orgName,
+            B.PAR_ORG_ID pid
+        FROM PERSONAL_DEPOSIT A
+        LEFT JOIN SYS_ORG B ON A.ORG_ID = B.ID
+        WHERE A.STAT_DATE = #{statDate, jdbcType=VARCHAR}
+        <if test="ccy != null and ccy != ''">
+            AND A.CCY = #{ccy, jdbcType=VARCHAR}
+        </if>
+        AND A.ORG_ID IN (SELECT ID FROM SYS_ORG START WITH ID = #{orgId, jdbcType=VARCHAR} CONNECT BY prior ID = PAR_ORG_ID)
+    </select>
+
+    <select id="fetchSumDatasByPages" parameterType="com.scfsoft.system.dto.SearchParam" resultType="com.scfsoft.system.entity.jpa.PersonalDeposit">
+        SELECT
+        sum(A.T_BAL) tBal,
+        sum(A.A_BAL) aBal,
+        A.STAT_DATE statDate,
+        A.CCY ccy,
+        A.UNIT unit,
+        sum(A.T_BAL_THAN_LAST_D) tBalThanLastD,
+        sum(A.T_BAL_THAN_TENDAYS) tBalThanTendays,
+        sum(A.T_BAL_THAN_LAST_S) tBalThanLastS,
+        sum(A.T_BAL_THAN_LAST_M) tBalThanLastM,
+        sum(A.T_BAL_THAN_BEGIN_Y) tBalThanBeginY,
+        sum(A.T_BAL_THAN_LAST_Y) tBalThanLastY,
+        sum(A.A_BAL_THAN_LAST_D) aBalThanLastD,
+        sum(A.A_BAL_THAN_TENDAYS) aBalThanTendays,
+        sum(A.A_BAL_THAN_LAST_S) aBalThanLastS,
+        sum(A.A_BAL_THAN_LAST_M) aBalThanLastM,
+        sum(A.A_BAL_THAN_BEGIN_Y) aBalThanBeginY,
+        sum(A.A_BAL_THAN_LAST_Y) aBalThanLastY,
+        sum(A.PRICE_SCISSORS) priceScissors,
+        B.ROOT_ORG_ID orgId
+        FROM PERSONAL_DEPOSIT A
+        LEFT JOIN SYS_ORG B ON A.ORG_ID = B.ID
+        WHERE A.STAT_DATE = #{statDate, jdbcType=VARCHAR}
+        <if test="ccy != null and ccy != ''">
+            AND A.CCY = #{ccy, jdbcType=VARCHAR}
+        </if>
+        GROUP BY A.STAT_DATE, A.CCY, A.UNIT, B.ORG_NAME_SHORT, B.ROOT_ORG_ID
+    </select>
+
+</mapper>

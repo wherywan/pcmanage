@@ -1,0 +1,70 @@
+server:
+  port: 8085
+  servlet:
+    context-path:
+eureka:
+  instance:
+    hostname: ${spring.cloud.client.ip-address}
+    preferIpAddress: true
+    instance-id: ${spring.application.name}@${eureka.instance.hostname}:${server.port}
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
+    metadata-map:
+      management:
+        context-path: ${server.servlet.context-path}/actuator
+    home-page-url-path: ${server.servlet.context-path}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://128.1.80.18:8085/eureka/
+    healthcheck:
+      enabled: false
+ark:
+  sdk:
+    swagger:
+      enabled: true
+    jwt:
+      issuer: ARK-Framework
+      expire-secs: 60
+    schedule:
+      sync-org:
+        enabled: true
+  system:
+    default-subscriber-service: com.scfsoft.system.service.SubscriberServiceSyncImpl
+    log:
+      enabled: true
+ccb:
+  uass:
+    enabled: true
+    server-address: https://128.192.122.88:8102/uass-core/centerAuthenticationServlet
+    channel: 02
+    auth-key: ce36807aa4ce46e4a0e9ad2644fbefaa
+    app-code: JSMA
+spring:
+  cache:
+    type: Simple
+  jpa:
+    database: oracle
+    show-sql: true
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    open-in-view: false
+  datasource:
+    url: jdbc:oracle:thin:@128.5.80.75:1521:ODSBPTDB
+    driver-class-name: oracle.jdbc.OracleDriver
+    username: spldata
+    password: oracle
+  jackson:
+    #    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+pagehelper:
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+  helper-dialect: ${spring.jpa.database}
+logging:
+  level:
+    root: info
+    com.scfsoft: debug

@@ -1,0 +1,19 @@
+info:
+  appName: ${spring.application.name}
+  appDesc: 'Sancho Application Test'
+  groupId: 'com.scfsoft'
+  artifactId: 'pc-manage'
+  version: '1.0.0'
+  license: GPL2
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+server:
+  port: 8080
+  servlet:
+    context-path:

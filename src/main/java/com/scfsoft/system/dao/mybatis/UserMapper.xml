@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scfsoft.system.dao.mybatis.UserMapper">
+    <select id="getUserByRoles" resultType="java.lang.String">
+        SELECT USER_ID FROM SYS_USER_ROLE
+        WHERE USER_ID IN
+        <foreach collection="sids" item="sid" open="(" close=")" separator=",">
+            #{sid}
+        </foreach>
+        <![CDATA[ AND ROLE_ID <> #{roleId} ]]>
+    </select>
+
+    <select id="fetchUsersByPage" parameterType="com.scfsoft.system.dto.UserSearchParam" resultType="com.scfsoft.system.dto.SysUserDto">
+        SELECT
+        A.ID sid,
+        A.USERNAME username,
+        A.USER_CODE userCode,
+        A.USER_TYPE userType,
+        A.USER_STATUS userStatus,
+        A.MOBILE_PHONE mobile,
+        A.ORG_ID orgId,
+        A.BUSINESS_LINE depId
+        FROM SYS_USER A
+        <if test="roleId!=null and roleId!=''">
+            , SYS_USER_ROLE B
+        </if>
+        where 1=1
+        <if test="roleId!=null and roleId!=''">
+           and B.USER_ID = A.ID
+           and B.ROLE_ID = #{roleId}
+        </if>
+        <if test="orgId!=null and orgId!=''">
+           and A.ORG_ID = #{orgId}
+        </if>
+        <if test="search!=null and search!=''">
+            <![CDATA[
+           and (A.USERNAME like '%${search}%' or A.ID LIKE '%${search}%' or A.REALNAME like '%${search}%')
+        ]]>
+        </if>
+    </select>
+
+    <select id="getUserByOrgs" resultType="java.lang.String">
+        SELECT USER_ID FROM SYS_USER_PARAM
+        WHERE USER_ID IN
+        <foreach collection="sids" item="sid" open="(" close=")" separator=",">
+            #{sid}
+        </foreach>
+        AND PARAM_KEY = 'ORD_ID'
+        <![CDATA[ AND PARAM_VALUE <> #{orgId} ]]>
+    </select>
+
+    <select id="getUserEmpId" resultType="java.lang.String">
+        SELECT EMP_ID FROM SYS_USER
+    </select>
+
+    <select id="getSysAllUsers" parameterType="com.scfsoft.system.dto.UserSearchParam" resultType="com.scfsoft.system.dto.SysUserDto" fetchSize="1000">
+        SELECT a.ID "sid", a.USERNAME "userName", a.ORG_ID "orgId", a.BUSINESS_LINE "depId", b.ROLE_ID "roles"
+        from SYS_USER a
+        left join SYS_USER_ROLE b ON a.id = b.user_id
+        where 1=1
+        <if test="orgIds != null and orgIds.size > 0">
+            and a.ORG_ID IN
+            <foreach collection="orgIds" item="orgId" open="(" close=")" separator=",">
+                #{orgId}
+            </foreach>
+        </if>
+        <if test="depIds != null and depIds.size > 0">
+            and a.BUSINESS_LINE IN
+            <foreach collection="depIds" item="depId" open="(" close=")" separator=",">
+                #{depId}
+            </foreach>
+        </if>
+        <if test="roleId != null and roleId != ''">
+            and b.role_id = #{roleId, jdbcType=VARCHAR}
+        </if>
+        <if test="excludeUser != null and excludeUser != ''">
+            and a.id != #{excludeUser, jdbcType=VARCHAR}
+        </if>
+        order by a.ORG_ID asc
+    </select>
+
+    <select id="getUserInfo" parameterType="java.lang.String" resultType="com.scfsoft.system.dto.SysUserDto">
+        SELECT a.ID "sid",
+        a.USERNAME "userName",
+        a.ORG_ID "orgId",
+        a.BUSINESS_LINE "depId",
+        b.ROLE_ID "roles",
+        a.MOBILE_PHONE "mobile"
+        from SYS_USER a
+        left join SYS_USER_ROLE b ON a.id = b.user_id where (a.id = #{id, jdbcType=VARCHAR} OR a.user_code = #{id, jdbcType=VARCHAR})
+    </select>
+
+    <insert id="saveUserInfo" parameterType="com.scfsoft.system.dto.SysUserDto">
+        INSERT INTO SYS_USER
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sid != null">
+                ID,
+            </if>
+            <if test="sid != null">
+                EMP_ID,
+            </if>
+            <if test="userCode != null">
+                USER_CODE,
+            </if>
+            <if test="mobile != null">
+                MOBILE_PHONE,
+            </if>
+            <if test="userType != null">
+                USER_TYPE,
+            </if>
+            <if test="username != null">
+                USERNAME,
+            </if>
+            <if test="userStatus != null">
+                USER_STATUS,
+            </if>
+            <if test="depId != null">
+                BUSINESS_LINE,
+            </if>
+            <if test="orgId != null">
+                ORG_ID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sid != null">
+                #{sid,jdbcType=VARCHAR},
+            </if>
+            <if test="sid != null">
+                #{sid,jdbcType=VARCHAR},
+            </if>
+            <if test="userCode != null">
+                #{userCode,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="userType != null">
+                #{userType,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=CHAR},
+            </if>
+            <if test="userStatus != null">
+                #{userStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="depId != null">
+                #{depId,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgId != null">
+                #{orgId,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateUser" parameterType="com.scfsoft.system.dto.SysUserDto">
+        update SYS_USER
+        <set>
+            <if test="username != null">
+                USERNAME = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                MOBILE_PHONE = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="orgId != null">
+                ORG_ID = #{orgId,jdbcType=VARCHAR},
+            </if>
+            <if test="depId != null">
+                BUSINESS_LINE = #{depId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ID = #{sid,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

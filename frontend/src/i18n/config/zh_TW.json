@@ -1,0 +1,167 @@
+{
+  "language": {
+    "name": "中文(簡體)"
+  },
+  "common": {
+    "language_select": "選擇語言",
+    "confirm": "確定",
+    "cancel": "取消",
+    "code": "編碼",
+    "desc": "說明",
+    "operations": "操作",
+    "name": "名稱",
+    "value": "值",
+    "search": "搜索",
+    "save": "保存",
+    "edit": "編輯",
+    "create": "新增",
+    "add": "新增",
+    "import": "導入",
+    "export": "導出",
+    "delete": "刪除",
+    "mobile": "手機",
+    "email": "郵箱",
+    "refresh": "刷新",
+    "no_data": "暫無數據",
+    "submit": "提交",
+    "effectDt": "生效日期",
+    "expireDt": "時效日期",
+    "type": "類型",
+    "address": "地址",
+    "tel": "電話",
+    "fax": "傳真",
+    "website": "網站",
+    "zipcode": "郵編",
+    "status": "狀態",
+    "sid": "序號",
+    "true": "是",
+    "false": "否",
+    "select": "請選擇"
+  },
+  "system": {
+    "subscriber": "系統用戶",
+    "sid": "SID",
+    "username": "用戶名",
+    "nickname": "昵稱",
+    "lastname": "姓",
+    "firstname": "名",
+    "fullname": "姓名",
+    "source": "來源",
+    "datetime": "時間",
+    "separator": "至",
+    "startTime": "開始時間",
+    "endTime": "結束時間",
+    "User": "用戶",
+    "Org": "機構",
+    "org": {
+      "orgName": "名稱",
+      "orgId": "編碼",
+      "orgShortName": "簡稱",
+      "orgType": "類型",
+      "lawer": "法人代表",
+      "regAddr": "註冊地址",
+      "addChild": "添加子機構"
+    },
+    "Role": "角色",
+    "Resource": "資源",
+    "Menu": "菜單",
+    "menu": {
+      "info": "菜單詳情",
+      "name": "標識",
+      "title": "菜單名稱",
+      "icon": "圖標",
+      "path": "菜單路徑",
+      "role": "權限",
+      "parent": "父菜單",
+      "sort": "排序",
+      "hidden": "可見",
+      "add": "添加子菜單"
+    },
+    "Permission": "權限",
+    "permission": {
+      "code": "編碼",
+      "name": "名稱",
+      "desc": "說明"
+    },
+    "role": {
+      "basic_info": "基本信息",
+      "basic_info_hint": "設置角色的名稱、編碼以及說明。其中編碼可以包含小寫字母、數字以及下劃線，並且不可重復",
+      "menu_hint": "賦予角色菜單訪問權限",
+      "permission_hint": "賦予角色特殊權限",
+      "user_hint": "賦予用戶當前角色"
+    },
+    "Dict": "字典",
+    "dict": {
+      "name": "關鍵字",
+      "count": "數量",
+      "label": "顯示值",
+      "codeTypeName": "類型名稱",
+      "codeType": "類型",
+      "pCodeType": "父類型",
+      "code": "代碼",
+      "codeValue": "代碼值",
+      "pCode": "父代碼"
+    },
+    "Cache": "緩存",
+    "cache": {
+      "name": "緩存名稱",
+      "key": "緩存鍵",
+      "val": "緩存值",
+      "size": "緩存數量",
+      "evict": "清除",
+      "refresh_time": "刷新時間"
+    },
+    "operations": {
+      "text": "標題或內容",
+      "datetime": "操作時間",
+      "username": "操作人員",
+      "title": "觸發事件",
+      "content": "事件內容"
+    }
+  },
+  "tips": {
+    "language_changed_to": "已經將顯示語言設置為: {name}",
+    "value_restored": "字段值已被恢復",
+    "is_required": "必須輸入",
+    "is_email": "必須是合法的郵箱地址",
+    "is_mobile": "必須是合法的11位手機號",
+    "confirm_delete": "確定要刪除 {name} 嗎？",
+    "confirm_delete_title": "提示",
+    "confirm_evict_cache": "確定要刪除 {name} 下的全部緩存？",
+    "confirm_evict_cache_by_key": "確定要刪除緩存 {name} 嗎？",
+    "submit_success": "{name} 信息保存成功！",
+    "delete_success": "{name} 信息刪除成功！",
+    "delete_cancel": "{name} 信息已取消刪除！"
+  },
+  "menu": {
+    "Dashboard": "首頁",
+    "System": "系統管理",
+    "DevTools": "開發工具集",
+    "devtools": {
+      "APIs":  "接口",
+      "Routers": "路由",
+      "Views": "視圖",
+      "I18Ns": "國際化"
+    },
+    "system": {
+      "Users": "用戶管理",
+      "Roles": "角色管理",
+      "Orgs": "機構管理",
+      "Resources": "資源管理",
+      "Menus": "菜單管理",
+      "Dict": "字典管理",
+      "Caches": "緩存管理",
+      "Params": "系統參數管理",
+      "Crons": "計劃任務管理",
+      "Operations": "操作日誌",
+      "Logs": "系統日誌"
+    },
+    "CMS": "內容管理",
+    "cms": {
+      "Articles": "文章",
+      "Gallary": "圖片",
+      "Videos": "視頻"
+    },
+    "Components": "組件"
+  }
+}

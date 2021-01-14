@@ -1,0 +1,4 @@
+spring:
+  application:
+    name: pc-manage
+    workspace: /Users/enbrau/workspaces/${spring.application.name}

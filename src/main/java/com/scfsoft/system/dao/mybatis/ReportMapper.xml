@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scfsoft.system.dao.mybatis.ReportMapper">
+    <select id="fetchReportByPage" parameterType="java.lang.String" resultType="com.scfsoft.system.entity.jpa.ReportInfo">
+        SELECT
+           A.ID id,
+           A.REPORT_TITLE reportTitle,
+           A.CREATED_TS createTime,
+           A.DONE_NUM || '/' || A.TOTAL_NUM completeStatus,
+           rtrim(xmlagg(xmlparse(content b.fill_form_name||',' wellformed)).getclobval(),',') fillUser
+        FROM REPORT_INFO A
+        LEFT JOIN REPORT_FILL B ON A.ID = B.REPORT_ID
+        <where>
+            <if test="createUser != null and createUser != ''">
+                A.CREATED_BY = #{createUser, jdbcType=VARCHAR}
+            </if>
+        </where>
+        GROUP BY A.ID, A.REPORT_TITLE, A.CREATED_TS, A.DONE_NUM || '/' || A.TOTAL_NUM
+    </select>
+
+    <delete id="deleteByReportId" parameterType="java.lang.String">
+        DELETE FROM REPORT_FILL WHERE REPORT_ID = #{reportId, jdbcType=VARCHAR}
+    </delete>
+
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scfsoft.system.dao.mybatis.UserRoleMapper">
+
+    <select id="getUserRole" parameterType="java.lang.String" resultType="java.lang.String">
+        select r.ROLE_ID as roleId from SYS_USER_ROLE r where r.USER_ID = #{userId,jdbcType=VARCHAR}
+    </select>
+
+    <update id="saveBl" parameterType="java.lang.String">
+         update SYS_USER u set u.BUSINESS_LINE = #{businessLine} where u.ID = #{userId}
+    </update>
+
+    <select id="getBl" parameterType="java.lang.String" resultType="com.scfsoft.system.entity.jpa.SysUserEntity">
+        select
+        u.user_id userId,
+        u.EMP_ID empId,
+        u.USER_CODE userCode,
+        u.MOBILE_PHONE mobilePhone,
+        u.WEIX_CODE weixCode,
+        u.USER_PASS userPass,
+        u.USER_TYPE userType,
+        u.USER_HEAD_ID userHeadId,
+        u.USER_HEAD_IMG userHeadImg,
+        u.USER_NAME userName,
+        u.USER_STATUS userStatus,
+        u.PWD_INIT_FLAG pwdInitFlag,
+        u.PWD_ERR_NUM pwdErrNum,
+        u.UNLOCK_TS unlockTs,
+        u.LAST_LOGIN_TS lastLoginTs,
+        u.MAC_CODE macCode,
+        u.IP_ADDR ipAddr,
+        u.EFFECT_DT effectDt,
+        u.EXPIRE_DT expireDt,
+        c.code_value as businessLine
+        from SYS_USER u
+        left join SYS_CODE c on c.code = u.BUSINESS_LINE and c.code_type = 'DEP'
+        where 1=1
+        <if test="userCode != null and userCode != ''">
+            and u.USER_CODE like concat('%',concat(#{userCode},'%'))
+        </if>
+
+
+    </select>
+
+    <select id="getBlId" parameterType="java.lang.String" resultType="java.lang.String">
+        select u.BUSINESS_LINE as "blId" from SYS_USER u where u.ID = #{userId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectOrgByUser" parameterType="java.lang.String" resultType="com.scfsoft.system.dto.UserOrg">
+        select t.user_id as userId,t.org_id as orgId
+        from SYS_USER_ORG t
+        where t.user_id=#{userId}
+    </select>
+
+    <delete id="deleteRoleByUserId" parameterType="java.lang.String">
+        DELETE FROM SYS_USER_ROLE WHERE USER_ID = #{sid, jdbcType=VARCHAR}
+    </delete>
+</mapper>

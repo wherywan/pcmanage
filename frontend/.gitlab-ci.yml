@@ -1,0 +1,21 @@
+stages:
+  - package
+  - deploy
+
+package:
+  stage: package
+  script: "npm install; 
+           npm run build:prod;
+           zip -r dist.zip ./dist;
+           mv -f dist.zip /mnt/disk2/data/nginx-i/www/data/ark-seed/ark-seed-2-vue-SNAPSHOT.zip"
+  tags: ["svr001"]
+
+deploy:
+  stage: deploy
+  script: "cd /mnt/disk2/data/nginx-i/www/demo;
+           rm -rf ./ark-seed-2-vue;
+           cp /mnt/disk2/data/nginx-i/www/data/ark-seed/ark-seed-2-vue-SNAPSHOT.zip ./dist.zip;
+           unzip dist.zip;
+           mv ./dist ./ark-seed-2-vue;
+           rm -rf dist.zip"
+  tags: ["svr001"]

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scfsoft.system.dao.mybatis.SameBusiPersonalDepositMapper">
+    <delete id="deleteByCurDate" parameterType="java.lang.String">
+        DELETE
+        FROM SAME_BUSI_PERSONAL_DEPOSIT
+        WHERE CUR_DATE = #{curDate, jdbcType=VARCHAR} AND TYPE = #{type, jdbcType=VARCHAR}
+    </delete>
+
+    <select id="getYearTotalByParam" parameterType="com.scfsoft.system.entity.jpa.SameBusiPersonalDeposit" resultType="com.scfsoft.system.entity.jpa.SameBusiPersonalDeposit">
+        select sum(CCB) ccbTotal,sum(ICBC) icbcTotal, sum(ABC) abcTotal,sum(BC) bcTotal
+        from SAME_BUSI_PERSONAL_DEPOSIT
+        WHERE TYPE = #{type, jdbcType=VARCHAR} and ORG_ID = #{orgId, jdbcType=VARCHAR} and CUR_DATE in
+        <foreach collection="dayList" item="day" index="day" open="(" close=")" separator=",">
+            #{day, jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+    <select id="getUpTenDays" parameterType="String" resultType="com.scfsoft.system.entity.jpa.SameBusiPersonalDeposit">
+        select NEW_Rank newRank,CCB ccb,ICBC icbc,ABC abc,BC bc
+        from SAME_BUSI_PERSONAL_DEPOSIT
+        WHERE TYPE = #{upType, jdbcType=VARCHAR} and ORG_ID = #{upOrgId, jdbcType=VARCHAR} and CUR_DATE = #{upTenDaysDate}
+    </select>
+
+    <select id="getLastYearDeposit" parameterType="String" resultType="com.scfsoft.system.entity.jpa.SameBusiPersonalDeposit">
+        select NEW_Rank newRank,CCB ccb,ICBC icbc,ABC abc,BC bc
+        from SAME_BUSI_PERSONAL_DEPOSIT
+        WHERE TYPE = #{lastType, jdbcType=VARCHAR} and ORG_ID = #{lastOrgId, jdbcType=VARCHAR} and CUR_DATE = #{lastYearDate}
+    </select>
+
+    <select id="getAllDeposit" parameterType="com.scfsoft.system.dto.SameBusiSearchParam" resultType="com.scfsoft.system.entity.jpa.SameBusiPersonalDeposit">
+        select CUR_DATE curDate,ORG_ID orgId,TYPE type,NEW_Rank newRank,CCB ccb,ICBC icbc,ABC abc,BC bc
+        from SAME_BUSI_PERSONAL_DEPOSIT
+        WHERE TYPE = #{type, jdbcType=VARCHAR} and CUR_DATE = #{curDate} order by ORG_ID asc
+    </select>
+
+</mapper>

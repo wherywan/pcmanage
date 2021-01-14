@@ -1,0 +1,83 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /pcmanage
+eureka:
+  dashboard:
+    path: /system/eureka
+  instance:
+    hostname: ${spring.cloud.client.ip-address}
+    preferIpAddress: true
+    instance-id: ${spring.application.name}@${eureka.instance.hostname}:${server.port}
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
+    metadata-map:
+      management:
+        context-path: ${server.servlet.context-path}/actuator
+    home-page-url-path: ${server.servlet.context-path}
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://localhost:8080${server.servlet.context-path}/eureka/
+    healthcheck:
+      enabled: true
+ark:
+  sdk:
+    swagger:
+      enabled: true
+    jwt:
+      issuer: ARK-Framework
+      expire-secs: 360000000
+    schedule:
+      sync-org:
+        enabled: true
+  system:
+#    default-subscriber-service: com.scfsoft.system.service.SubscriberServiceSyncImpl
+    default-subscriber-service: com.scfsoft.system.service.SubscriberServiceDbImpl
+    log:
+      enabled: true
+spring:
+  cache:
+    type: Simple
+  jpa:
+    database: oracle
+    show-sql: false
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      jdbc:
+        batch_size: 1000
+        batch_versioned_data: true
+      order_inserts: true
+      order_updates: true
+      generate_statistics: false
+    open-in-view: false
+  datasource:
+    url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
+    username: pcmanager
+    password: pcmanager
+    driver-class-name: oracle.jdbc.OracleDriver
+  jackson:
+    time-zone: GMT+8
+pagehelper:
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+  helper-dialect: ${spring.jpa.database}
+logging:
+  level:
+    root: info
+    com.scfsoft: debug
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 60000
+        read-timeout: 60000
+attach:
+  root-path: /app/jcms/attach
+  temp-path: /app/jcms/mng/temp
+tempfile:
+  deposit: YYYY年“春耕行动”个人存款战报（MM月DD号）.xlsx
+  same-busi-deposit: YYYY年同业各类存款比对（MM月DD号）.xlsx

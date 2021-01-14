@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scfsoft.system.dao.mybatis.SystemNoticeMapper">
+
+    <resultMap id="multiSystemNotice" type="com.scfsoft.system.dto.MultiSystemNotice">
+        <id column="id" property="id" />
+        <result column="noticeType" property="noticeType"  />
+        <result column="title" property="title"  />
+        <result column="content" property="content"  />
+        <result column="publishTime" property="publishTime"  />
+        <result column="isVisible" property="isVisible"  />
+        <result column="scope" property="scope"  />
+        <result column="createdBy" property="createdBy"  />
+        <result column="createdTs" property="createdTs"  />
+        <result column="lastUpdBy" property="lastUpdBy"  />
+        <result column="lastUpdTs" property="lastUpdTs"  />
+        <collection  property="targetId" javaType="java.util.List" ofType="java.lang.String">
+            <constructor>
+                <arg column="targetId"></arg>
+            </constructor>
+        </collection>
+    </resultMap>
+
+    <select id="findSystemNoticeByPage" parameterType="com.scfsoft.system.dto.SystemNoticeSearchParam" resultType="com.scfsoft.system.dto.SystemNotice">
+        <![CDATA[
+        select N.ID as id,
+          NOTICE_TYPE as noticeType,
+          TITLE as title,
+          PUBLISH_TIME as publishTime,
+          IS_VISIBLE as isVisible,
+          N.CREATED_BY as createdBy,
+          N.CREATED_TS as createdTs,
+          N.LAST_UPD_BY as lastUpdBy,
+          N.LAST_UPD_TS as lastUpdTs
+          from SYS_NOTICE N
+          where 1=1
+        ]]>
+        <if test="noticeType!=null and noticeType!=''">
+        <![CDATA[
+           and NOTICE_TYPE = #{noticeType}
+        ]]>
+        </if>
+        <if test="key!=null and key!=''">
+        <![CDATA[
+           and (TITLE like '%${key}%' or CONTENT LIKE '%${key}%')
+        ]]>
+        </if>
+        <if test="publishTime!=null and publishTime!=''">
+        <![CDATA[
+           and (to_char(PUBLISH_TIME,'yyyy-MM-dd hh24:mm:ss') like '%${publishTime}%')
+        ]]>
+        </if>
+        order by PUBLISH_TIME desc
+    </select>
+
+    <!---->
+    <!--<select id="findSystemNoticeByPage" parameterType="SystemNoticeSearchParam" resultType="SystemNotice">-->
+        <!--<![CDATA[-->
+        <!--select N.ID as id,-->
+          <!--NOTICE_TYPE as noticeType,-->
+          <!--TITLE as title,-->
+          <!--PUBLISH_TIME as publishTime,-->
+          <!--IS_VISIBLE as isVisible,-->
+          <!--SCOPE as scope,-->
+          <!--TARGET_ID as targetId,-->
+          <!--N.CREATED_BY as createdBy,-->
+          <!--N.CREATED_TS as createdTs,-->
+          <!--N.LAST_UPD_BY as lastUpdBy,-->
+          <!--N.LAST_UPD_TS as lastUpdTs-->
+          <!--from SYS_NOTICE N,SYS_NOTICE_PUBLISH NP-->
+          <!--where N.id = NP.NOTICE_ID-->
+        <!--]]>-->
+        <!--<if test="noticeType!=null and noticeType!=''">-->
+        <!--<![CDATA[-->
+           <!--and NOTICE_TYPE = #{noticeType}-->
+        <!--]]>-->
+        <!--</if>-->
+        <!--<if test="key!=null and key!=''">-->
+        <!--<![CDATA[-->
+           <!--and (TITLE like '%${key}%' or CONTENT LIKE '%${key}%')-->
+        <!--]]>-->
+        <!--</if>-->
+        <!--<if test="publishTime!=null and publishTime!=''">-->
+        <!--<![CDATA[-->
+           <!--and (to_char(PUBLISH_TIME,'yyyy-MM-dd hh24:mm:ss') like '%${publishTime}%')-->
+        <!--]]>-->
+        <!--</if>-->
+        <!--order by PUBLISH_TIME desc-->
+    <!--</select>-->
+
+    <!--<select id="findSystemNoticeById" resultType="MultiSystemNotice">-->
+        <!--<![CDATA[-->
+        <!--select N.ID as id,-->
+          <!--NOTICE_TYPE as noticeType,-->
+          <!--TITLE as title,-->
+          <!--CONTENT as content,-->
+          <!--PUBLISH_TIME as publishTime,-->
+          <!--IS_VISIBLE as isVisible,-->
+          <!--SCOPE as scope,-->
+          <!--TARGET_ID as targetId,-->
+          <!--N.CREATED_BY as createdBy,-->
+          <!--N.CREATED_TS as createdTs,-->
+          <!--N.LAST_UPD_BY as lastUpdBy,-->
+          <!--N.LAST_UPD_TS as lastUpdTs-->
+          <!--from SYS_NOTICE N,SYS_NOTICE_PUBLISH NP-->
+          <!--where N.id = NP.NOTICE_ID and N.id = #{noticeId}-->
+        <!--]]>-->
+    <!--</select>-->
+
+
+    <select id="findMultiSystemNoticeById" resultMap="multiSystemNotice">
+        <![CDATA[
+        select N.ID as id,
+          NOTICE_TYPE as noticeType,
+          TITLE as title,
+          CONTENT as content,
+          PUBLISH_TIME as publishTime,
+          IS_VISIBLE as isVisible,
+          SCOPE as scope,
+          TARGET_ID as targetId,
+          N.CREATED_BY as createdBy,
+          N.CREATED_TS as createdTs,
+          N.LAST_UPD_BY as lastUpdBy,
+          N.LAST_UPD_TS as lastUpdTs
+          from SYS_NOTICE N,SYS_NOTICE_PUBLISH NP
+          where N.id = NP.NOTICE_ID and N.id = #{noticeId}
+        ]]>
+    </select>
+    <!--select id="findSubscriberSystemNotice" resultType="com.scfsoft.emprisk.api.dto.SystemNotice">
+        <![CDATA[
+        select SYS_NOTICE.ID as id,
+          NOTICE_TYPE as noticeType,
+          TITLE as title,
+          CONTENT as content,
+          PUBLISH_TIME as publishTime,
+          IS_VISIBLE as isVisible,
+          SCOPE as scope,
+          TARGET_ID as targetId,
+          SYS_NOTICE.CREATED_BY as createdBy,
+          SYS_NOTICE.CREATED_TS as createdTs,
+          SYS_NOTICE.LAST_UPD_BY as lastUpdBy,
+          SYS_NOTICE.LAST_UPD_TS as lastUpdTs
+          from SYS_NOTICE,SYS_NOTICE_PUBLISH
+          where SYS_NOTICE.ID = SYS_NOTICE_PUBLISH.NOTICE_ID
+          and IS_VISIBLE = 'Y' and SYSDATE > PUBLISH_TIME
+          and ( case
+            when (SYS_NOTICE_PUBLISH.SCOPE = 'all') then (SYS_NOTICE_PUBLISH.TARGET_ID = 'all')
+            when (SYS_NOTICE_PUBLISH.SCOPE = 'user') then (SYS_NOTICE_PUBLISH.TARGET_ID in (
+              select SYS_USER.ID from SYS_USER where SYS_USER.ID = #{userId}))
+            when (SYS_NOTICE_PUBLISH.SCOPE = 'org') then (SYS_NOTICE_PUBLISH.TARGET_ID in (
+              select SYS_USER.ORG_ID from SYS_USER where SYS_USER.ID = #{userId}))
+            when (SYS_NOTICE_PUBLISH.SCOPE = 'role') then (SYS_NOTICE_PUBLISH.TARGET_ID in (
+              select SYS_USER_ROLE.ROLE_ID from SYS_USER_ROLE where SYS_USER_ROLE.USER_ID = #{userId}))
+            else false
+            end
+          ) = true
+          order by PUBLISH_TIME desc
+        ]]>findMultiSystemNoticeById
+    </select-->
+
+    <select id="findSubscriberSystemNotice" resultType="com.scfsoft.system.dto.SystemNotice">
+        <![CDATA[
+        select SYS_NOTICE.ID as id,
+          NOTICE_TYPE as noticeType,
+          TITLE as title,
+          PUBLISH_TIME as publishTime,
+          SYS_NOTICE.CREATED_BY as createdBy
+          from SYS_NOTICE,SYS_NOTICE_PUBLISH
+          where SYS_NOTICE.ID = SYS_NOTICE_PUBLISH.NOTICE_ID
+          and IS_VISIBLE = 'Y' and SYSDATE > PUBLISH_TIME
+          and (
+            (SYS_NOTICE_PUBLISH.SCOPE = 'all' and SYS_NOTICE_PUBLISH.TARGET_ID = 'all') or
+            (SYS_NOTICE_PUBLISH.SCOPE = 'user' and SYS_NOTICE_PUBLISH.TARGET_ID in (
+              select SYS_USER.ID from SYS_USER where SYS_USER.ID = #{userId})
+            )
+            or
+            (SYS_NOTICE_PUBLISH.SCOPE = 'org' and SYS_NOTICE_PUBLISH.TARGET_ID in (
+                select id from SYS_ORG start with id = SYS_NOTICE_PUBLISH.TARGET_ID connect by prior id = par_org_id)
+            )
+            or
+            (SYS_NOTICE_PUBLISH.SCOPE = 'role' and SYS_NOTICE_PUBLISH.TARGET_ID in (
+              select SYS_USER_ROLE.ROLE_ID from SYS_USER_ROLE where SYS_USER_ROLE.USER_ID = #{userId})
+            )
+            or
+            (SYS_NOTICE_PUBLISH.SCOPE = 'app' and SYS_NOTICE_PUBLISH.TARGET_ID in (
+              select PORTAL_APP_USER.APP_ID from PORTAL_APP_USER where PORTAL_APP_USER.USER_ID = #{userId})
+            )
+          )
+          order by PUBLISH_TIME desc
+        ]]>
+    </select>
+
+</mapper>

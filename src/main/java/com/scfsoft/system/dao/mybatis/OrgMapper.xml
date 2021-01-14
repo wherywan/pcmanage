@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scfsoft.system.dao.mybatis.OrgMapper">
+    <select id="getOrgTree" resultType="com.scfsoft.system.dto.OrgDto">
+        SELECT ID id, PAR_ORG_ID pid, ORG_NAME_SHORT orgName FROM SYS_ORG
+        ORDER BY ORDER_BY
+    </select>
+
+</mapper>
